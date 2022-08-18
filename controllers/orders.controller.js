@@ -4,6 +4,14 @@ const stripe = require("stripe")(
   "sk_test_51LPeFWDJS1hIdT9QUKmzFpak0NbsaVFBFayAnrm4gMiPRe84oGWLVpXKdD8BXXQGiRwuec3OSYs5RZSewk5RAVvx00aYP93Eeh"
 );
 
+const successUrl = `http://localhost:3000/orders/success`;
+const cancelUrl = `http://localhost:3000/orders/failure`;
+
+if (process.env.POST) {
+  successUrl = `https://immense-crag-29387.herokuapp.com/orders/success`;
+  cancelUrl = `https://immense-crag-29387.herokuapp.com/orders/failure`;
+}
+
 async function getOrders(req, res) {
   try {
     const orders = await Order.findAllForUser(res.locals.uid);
@@ -48,8 +56,8 @@ async function newOrder(req, res, next) {
       };
     }),
     mode: "payment",
-    success_url: `http://localhost:3000/orders/success`,
-    cancel_url: `http://localhost:3000/orders/failure`,
+    success_url: successUrl,
+    cancel_url: cancelUrl,
   });
 
   res.redirect(303, session.url);

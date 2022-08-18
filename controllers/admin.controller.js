@@ -1,7 +1,12 @@
 const Product = require("../models/product.model");
 const Order = require("../models/order.model");
+const { s3Client, bucketName } = require("../config/dev");
+const { PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const sharp = require("sharp");
+const crypto = require("crypto");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
-async function getProducts(req, res) {
+async function getProducts(req, res, next) {
   try {
     const products = await Product.findAll();
     res.render("admin/products/all-products", { products: products });
@@ -16,13 +21,35 @@ function getNewProduct(req, res) {
 }
 
 async function createNewProduct(req, res, next) {
+  const file = req.file;
+  const imageBuffer = await sharp(file.buffer).toBuffer(); // .resize({ height: 720, width: 1080, fit: "contain" })
+  const imageName = crypto.randomBytes(32).toString("hex");
+
+  //////////// upload image to S3
+  const uploadParams = {
+    Bucket: bucketName,
+    Key: imageName,
+    Body: imageBuffer,
+    ContentType: file.mimetype,
+  };
+  await s3Client.send(new PutObjectCommand(uploadParams));
+
+  const imageUrl = "".concat(
+    "https://",
+    bucketName,
+    ".s3.amazonaws.com/",
+    imageName
+  );
+  // save to database
   const product = new Product({
     ...req.body,
-    image: req.file.filename,
+    image: imageName,
+    imageUrl: imageUrl,
   });
 
   try {
     await product.save();
+    // console.log(imageUrl);
   } catch (error) {
     next(error);
     return;
@@ -47,7 +74,27 @@ async function updateProduct(req, res, next) {
   });
 
   if (req.file) {
-    product.replaceImage(req.file.filename);
+    const file = req.file;
+    imageBuffer = await sharp(file.buffer).toBuffer(); // .resize({ height: 720, width: 1080, fit: "contain" })
+    const imageName = crypto.randomBytes(32).toString("hex");
+
+    //////////// upload image to S3
+    const uploadParams = {
+      Bucket: bucketName,
+      Key: imageName,
+      Body: imageBuffer,
+      ContentType: file.mimetype,
+    };
+    await s3Client.send(new PutObjectCommand(uploadParams));
+
+    const imageUrl = "".concat(
+      "https://",
+      bucketName,
+      ".s3.amazonaws.com/",
+      imageName
+    );
+
+    product.replaceImage(imageName, imageUrl);
   }
 
   try {
@@ -69,8 +116,6 @@ async function deleteProduct(req, res, next) {
     return next(error);
   }
 
-  // y res.json({message: Product Deleted! }) not working
-  // redirect after delete product
   res.redirect("/admin/products");
 }
 

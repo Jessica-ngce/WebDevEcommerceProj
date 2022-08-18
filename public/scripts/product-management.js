@@ -6,15 +6,21 @@ async function deleteProduct(event) {
   const buttonElement = event.target;
   const productId = buttonElement.dataset.productid;
   const csrfToken = buttonElement.dataset.csrf;
+  console.log(csrfToken);
+  let response;
 
-  const response = await fetch(
-    "/admin/products/" + productId + "?_csrf=" + csrfToken,
-    {
-      method: "DELETE",
-    }
-  );
+  try {
+    response = await fetch(
+      "/admin/products/" + productId + "?_csrf=" + csrfToken,
+      {
+        method: "DELETE",
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
 
-  if (!response.ok) {
+  if (!response) {
     alert("Something went wrong!");
     return;
   }

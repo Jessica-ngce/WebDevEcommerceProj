@@ -1,5 +1,4 @@
 const mongodb = require("mongodb");
-
 const db = require("../data/database");
 
 class Product {
@@ -9,14 +8,12 @@ class Product {
     this.price = +productData.price;
     this.description = productData.description;
     this.image = productData.image;
-    this.updateImageData();
+    this.imageUrl = productData.imageUrl;
     if (productData._id) {
       this.id = productData._id.toString();
     }
   }
 
-  // for static object
-  // no neet to create an object based on the class
   static async findById(productId) {
     let prodId;
     try {
@@ -64,14 +61,6 @@ class Product {
     });
   }
 
-  updateImageData() {
-    // backtick
-    this.imagePath = `/product-data/images/${this.image}`;
-    this.imageUrl = `/products/assets/images/${this.image}`;
-
-    // get img from atlas
-  }
-
   async save() {
     const productData = {
       title: this.title,
@@ -79,14 +68,15 @@ class Product {
       price: this.price,
       description: this.description,
       image: this.image,
+      imageUrl: this.imageUrl,
     };
 
     if (this.id) {
       const productId = new mongodb.ObjectId(this.id);
 
-      // not overwrite existing img with undefined
       if (!this.image) {
         delete productData.image;
+        delete productData.imageUrl;
       }
 
       await db
@@ -98,9 +88,10 @@ class Product {
     }
   }
 
-  replaceImage(newImage) {
-    this.image = newImage;
-    this.updateImageData();
+  replaceImage(newImgName, newImgUrl) {
+    // get imagename in data base
+    this.image = newImgName;
+    this.imageUrl = newImgUrl;
   }
 
   remove() {

@@ -6,18 +6,18 @@ html {
   font-family: "Montserrat", "sans-serif";
 
   --color-gray-50: rgb(243, 236, 230);
-  --color-gray-100: rgb(207, 201, 195);
+  --color-gray-100: rgb(105, 103, 101);
   --color-gray-300: rgb(99, 92, 86);
   --color-gray-400: rgb(70, 65, 60);
-  --color-gray-500: rgb(37, 34, 31);
-  --color-gray-600: rgb(32, 29, 26);
+  --color-gray-500: white;
+  --color-gray-600: rgba(51, 47, 47, 0.8);
   --color-gray-700: rgb(31, 26, 22);
 
   --color-primary-50: rgb(253, 224, 200);
   --color-primary-100: rgb(253, 214, 183);
-  --color-primary-200: rgb(250, 191, 143);
-  --color-primary-400: rgb(223, 159, 41);
-  --color-primary-500: rgb(212, 136, 14);
+  --color-primary-200: rgb(245, 243, 160);
+  --color-primary-400: rgb(255, 251, 0);
+  --color-primary-500: rgb(105, 101, 101);
   --color-primary-700: rgb(212, 120, 14);
   --color-primary-200-contrast: rgb(100, 46, 2);
   --color-primary-500-contrast: white;
@@ -40,15 +40,19 @@ html {
 }
 
 body {
-  background-color: var(--color-gray-500);
-  color: var(--color-gray-100);
+  color: var(--color-gray-500);
   margin: 0;
+  position: relative;
 }
 
 main {
   width: 90%;
-  max-width: 50rem;
+  min-height: calc(100vh - 80px - 28px);
   margin: 0 auto;
+}
+
+main h1 {
+  color: var(--color-gray-100);
 }
 
 ul,
@@ -60,28 +64,26 @@ ol {
 
 a {
   text-decoration: none;
-  color: var(--color-primary-400);
+  color: rgb(26, 26, 26);
 }
 
 .btn {
   cursor: pointer;
   font: inherit;
   padding: var(--space-2) var(--space-6);
-  background-color: var(--var-color-primary-500);
-  color: var(--color-primary-500-contrast);
+  color: black;
   border: 1px solid var(--color-primary-500);
   border-radius: var(--border-radius-small);
 }
 
-.btn:hover,
-.btn:active {
-  background-color: var(--color-primary-700);
-  border-color: var(--color-primary-700);
+.btn:hover {
+  color: rgb(255, 255, 255);
+  background-color: rgba(123, 123, 123, 0.8);
 }
 
 .btn-alt {
   background-color: transparent;
-  color: var(--color-primary-500);
+  color: var(--color-gray-500);
 }
 
 .btn-alt:hover,
@@ -114,4 +116,14 @@ a {
   border-radius: 10rem;
   background-color: var(--color-primary-500);
   color: var(--color-primary-500-contrast);
+}
+
+footer {
+  bottom: 0;
+  width: 100%;
+}
+
+.nav-items a:hover {
+  color: rgb(255, 255, 255);
+  background-color: rgba(123, 123, 123, 0.8);
 }
