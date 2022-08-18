@@ -4,7 +4,7 @@ form hr {
 }
 
 label {
-  color: var(--color-gray-100);
+  color: var(--color-gray-700);
   display: block;
   margin-bottom: var(--space-2);
 }
@@ -13,8 +13,7 @@ input,
 textarea {
   font: inherit;
   padding: var(--space-2);
-  border-radius: var(--border-radius-small);
-  border: none;
+  border: solid;
   width: 90%;
 }
 
@@ -33,4 +32,9 @@ textarea {
   height: 10rem;
   object-fit: cover;
   border-radius: var(--border-radius-small);
+}
+
+#main-header {
+  border-bottom: 1px solid var(--color-primary-500);
+  background-color: var(--color-gray-500);
 }
